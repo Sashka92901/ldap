@@ -1,0 +1,13 @@
+{% for user in ldap_users %}
+dn: uid={{ user.uid }},dc={{ ldap_domain.split('.')[0] }},dc={{ ldap_domain.split('.')[1] }}
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: {{ user.cn }}
+sn: {{ user.sn }}
+uid: {{ user.uid }}
+uidNumber: {{ loop.index + 1000 }}
+gidNumber: 1000
+homeDirectory: /home/{{ user.uid }}
+userPassword: {{ user.password }}
+{% endfor %}
