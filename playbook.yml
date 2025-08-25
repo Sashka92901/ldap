@@ -1,0 +1,44 @@
+- hosts: all
+  become: yes
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Установка  OpenLDAP
+      apt:
+        name:
+          - slapd
+          - ldap-utils
+        state: present
+        update_cache: yes
+
+    - name: Сгенерировать пароль администратора LDAP
+      command: slappasswd -s "{{ ldap_admin_password }}"
+      register: ldap_admin_hashed
+      changed_when: false
+
+    - name: Настройка домена и организации
+      template:
+        src: files/base.ldif.j2
+        dest: /tmp/base.ldif
+
+    - name: Базовую конфигурация LDAP
+      command: ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/base.ldif
+      args:
+        creates: "/etc/ldap/slapd.d/cn=config/olcDatabase={1}mdb.ldif"
+
+    - name: add users
+      template:
+        src: files/users.ldif.j2
+        dest: /tmp/users.ldif
+
+    - name: load users
+      command: ldapadd -x -D "cn=admin,dc={{ ldap_domain.split('.')[0] }},dc={{ ldap_domain.split('.')[1] }}" -w {{ ldap_admin_password }} -f /tmp/users.ldif
+
+    - name: add groups
+      template:
+        src: files/groups.ldif.j2
+        dest: /tmp/groups.ldif
+
+    - name: load grops
+      command: ldapadd -x -D "cn=admin,dc={{ ldap_domain.split('.')[0] }},dc={{ ldap_domain.split('.')[1] }}" -w {{ ldap_admin_password }} -f /tmp/groups.ldif
