@@ -1,0 +1,9 @@
+{% for group in ldap_groups %}
+dn: cn={{ group.cn }},dc={{ ldap_domain.split('.')[0] }},dc={{ ldap_domain.split('.')[1] }}
+objectClass: posixGroup
+cn: {{ group.cn }}
+gidNumber: {{ loop.index + 2000 }}
+{% for member in group.members %}
+memberUid: {{ member }}
+{% endfor %}
+{% endfor %}
