@@ -1,0 +1,10 @@
+vars
+ldap_domain: "test.com"
+ldap_org: "testorg"
+ldap_admin_password: "12345"
+ldap_users:
+  - { uid: "user1", cn: "User One", sn: "One", password: "Passw0rd1" }
+  - { uid: "user2", cn: "User Two", sn: "Two", password: "Passw0rd2" }
+ldap_groups:
+  - { cn: "developers", members: ["user1"] }
+  - { cn: "admins", members: ["user2"] }
