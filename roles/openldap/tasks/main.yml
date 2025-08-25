@@ -13,7 +13,7 @@
 
 - name: Настройка домена и организации
   template:
-    src: files/base.ldif.j2
+    src: base.ldif.j2
     dest: /tmp/base.ldif
 
 - name: Базовую конфигурация LDAP
@@ -23,7 +23,7 @@
 
 - name: add users
   template:
-    src: files/users.ldif.j2
+    src: users.ldif.j2
     dest: /tmp/users.ldif
 
 - name: load users
@@ -31,7 +31,7 @@
 
 - name: add groups
   template:
-    src: files/groups.ldif.j2
+    src: groups.ldif.j2
     dest: /tmp/groups.ldif
 
 - name: load grops
