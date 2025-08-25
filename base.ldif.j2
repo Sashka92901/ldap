@@ -1,0 +1,21 @@
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: dc={{ ldap_domain.split('.')[0] }},dc={{ ldap_domain.split('.')[1] }}
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcRootDN
+olcRootDN: cn=admin,dc={{ ldap_domain.split('.')[0] }},dc={{ ldap_domain.split('.')[1] }}
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcRootPW
+olcRootPW: {{ ldap_admin_hashed.stdout }}
+
+dn: dc={{ ldap_domain.split('.')[0] }},dc={{ ldap_domain.split('.')[1] }}
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: {{ ldap_org }}
+dc: {{ ldap_domain.split('.')[0] }}
